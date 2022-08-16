@@ -1,4 +1,3 @@
-import tkinter
 from tkinter import *
 from tkinter import messagebox
 
@@ -32,6 +31,7 @@ root.resizable(False, False)
 Label(text="Text").pack()
 txt = Text(root, width=100, height=10)
 txt.insert(END, test_text)
+txt.config(state="disabled")
 
 txt.pack()
 

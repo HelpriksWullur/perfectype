@@ -38,6 +38,7 @@ txt.pack()
 Label(text="Input").pack()
 in_txt = Text(root, width=100, height=10)
 in_txt.bind('<Key>', check)
+in_txt.focus()
 
 in_txt.pack()
 

@@ -1,10 +1,26 @@
+import random
 from tkinter import *
 from tkinter import messagebox
 
 WIDTH = 640
 HEIGHT = 480
 
-test_text = "Hello World"
+raw_texts = ['aku', 'dia', 'kamu', 'pergi', 'harus', 'uang', 'rumah', 'bernyanyi', 'kembali', 'hutang', 'bayar', 'dokter', 'malam', 'hati', 'sakit', 'tinggal', 'siapa']
+test_text = ""
+rand_count = 0
+
+
+def rnd():
+    global test_text, rand_count, stat
+    rand_count += 1
+    random.shuffle(raw_texts)
+    test_text = " ".join(raw_texts)
+    if rand_count > 1:
+        txt.config(state="normal")
+        txt.delete("1.0", END)
+        txt.insert(END, test_text)
+        txt.config(state="disabled")
+        in_txt.delete("1.0", END)
 
 
 def check(ev):
@@ -26,6 +42,8 @@ def on_closing():
     if messagebox.askokcancel("Keluar", "Apakah Anda ingin keluar?"):
         root.destroy()
 
+
+rnd()
 
 root = Tk()
 root.title("Perfectype")
@@ -53,6 +71,8 @@ res_text.set("Waiting...")
 
 result = Label(root, textvariable=res_text)
 result.pack()
+
+Button(root, text="random", command=rnd).pack()
 
 root.protocol("WM_DELETE_WINDOW", on_closing)
 root.mainloop()

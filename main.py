@@ -14,6 +14,12 @@ def check(ev):
                 res_text.set("Akurat")
             else:
                 res_text.set("belum akurat")
+        else:
+            if ev.keycode != 50 and ev.keycode != 62:
+                if ev.char == txt.get("1.0", "end-1c")[len(in_txt.get("1.0", "end-1c"))]:
+                    print("benar")
+                else:
+                    print("salah")
 
 
 def on_closing():
@@ -29,14 +35,14 @@ root.geometry("{}x{}+{}+{}".format(WIDTH, HEIGHT,
 root.resizable(False, False)
 
 Label(text="Text").pack()
-txt = Text(root, width=100, height=10)
+txt = Text(root, width=100, height=10, padx=5, pady=5)
 txt.insert(END, test_text)
 txt.config(state="disabled")
 
 txt.pack()
 
 Label(text="Input").pack()
-in_txt = Text(root, width=100, height=10)
+in_txt = Text(root, width=100, height=10, padx=5, pady=5)
 in_txt.bind('<Key>', check)
 in_txt.focus()
 

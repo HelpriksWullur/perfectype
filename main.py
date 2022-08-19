@@ -5,13 +5,15 @@ from tkinter import messagebox
 WIDTH = 640
 HEIGHT = 480
 
-raw_texts = ['aku', 'dia', 'kamu', 'pergi', 'harus', 'uang', 'rumah', 'bernyanyi', 'kembali', 'hutang', 'bayar', 'dokter', 'malam', 'hati', 'sakit', 'tinggal', 'siapa']
+raw_texts = ['aku', 'dia', 'kamu', 'pergi', 'harus', 'uang', 'rumah', 'bernyanyi', 'kembali', 'hutang', 'bayar',
+             'dokter', 'malam', 'hati', 'sakit', 'tinggal', 'siapa', 'siang', 'lapar', 'anak', 'wanita', 'lupa',
+             'kalah', 'makan', 'lari', 'kalau', 'dan', 'lalu', 'marah', 'kepada', 'satu', 'banyak', 'biasa', 'kapan']
 test_text = ""
 rand_count = 0
 
 
 def rnd():
-    global test_text, rand_count, stat
+    global test_text, rand_count, res_text
     rand_count += 1
     random.shuffle(raw_texts)
     test_text = " ".join(raw_texts)
@@ -21,6 +23,7 @@ def rnd():
         txt.insert(END, test_text)
         txt.config(state="disabled")
         in_txt.delete("1.0", END)
+        res_text.set("Waiting...")
 
 
 def check(ev):

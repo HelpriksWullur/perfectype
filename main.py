@@ -11,12 +11,14 @@ raw_texts = ['aku', 'dia', 'kamu', 'pergi', 'harus', 'uang', 'rumah', 'bernyanyi
 test_text = ""
 rand_count = 0
 
+keycodes = {111, 113, 114, 116}
+
 
 def rnd():
     global test_text, rand_count, res_text
     rand_count += 1
     random.shuffle(raw_texts)
-    test_text = " ".join(raw_texts)
+    test_text = " ".join(raw_texts[0:30])
     if rand_count > 1:
         txt.config(state="normal")
         txt.delete("1.0", END)
@@ -27,18 +29,21 @@ def rnd():
 
 
 def check(ev):
-    if ev.keycode != 22:
+    if ev.keycode not in keycodes:
         if len(txt.get("1.0", "end-1c")) == len(in_txt.get("1.0", "end-1c") + ev.char):
             if txt.get("1.0", "end-1c") == in_txt.get("1.0", "end-1c") + ev.char:
                 res_text.set("Akurat")
             else:
                 res_text.set("belum akurat")
         else:
+            res_text.set("Waiting...")
             if ev.keycode != 50 and ev.keycode != 62:
                 if ev.char == txt.get("1.0", "end-1c")[len(in_txt.get("1.0", "end-1c"))]:
                     print("benar")
                 else:
                     print("salah")
+    # if ev.keycode != 22:
+    #     pass
 
 
 def on_closing():
@@ -56,15 +61,16 @@ root.geometry("{}x{}+{}+{}".format(WIDTH, HEIGHT,
 root.resizable(False, False)
 
 Label(text="Text").pack()
-txt = Text(root, width=100, height=10, padx=5, pady=5)
+txt = Text(root, width=100, height=6, padx=5, pady=5)
 txt.insert(END, test_text)
-txt.config(state="disabled")
+txt.config(state="disabled", font="arial 19")
 
 txt.pack()
 
 Label(text="Input").pack()
-in_txt = Text(root, width=100, height=10, padx=5, pady=5)
+in_txt = Text(root, width=100, height=6, padx=5, pady=5)
 in_txt.bind('<Key>', check)
+in_txt.config(font="arial 19")
 in_txt.focus()
 
 in_txt.pack()

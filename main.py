@@ -8,10 +8,9 @@ class App:
     WIDTH = 640
     HEIGHT = 480
 
-    raw_texts = ['aku', 'dia', 'kamu', 'pergi', 'harus', 'uang', 'rumah', 'bernyanyi', 'kembali', 'hutang', 'bayar',
-                 'dokter', 'malam', 'hati', 'sakit', 'tinggal', 'siapa', 'siang', 'lapar', 'anak', 'wanita', 'lupa',
-                 'kalah', 'makan', 'lari', 'kalau', 'dan', 'lalu', 'marah', 'kepada', 'satu', 'banyak', 'biasa',
-                 'kapan']
+    with open("src/raw.txt", 'r') as text:
+        raw_texts = text.read().split()
+
     test_text = ""
     rand_count = 0
 
@@ -38,7 +37,6 @@ class App:
         self.in_txt.pack()
 
         self.res_text = StringVar()
-        self.res_text.set("Waiting...")
 
         result = Label(self.root, textvariable=self.res_text)
         result.pack()

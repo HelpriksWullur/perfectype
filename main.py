@@ -1,87 +1,85 @@
 import random
 from tkinter import *
 from tkinter import messagebox
-
-WIDTH = 640
-HEIGHT = 480
-
-raw_texts = ['aku', 'dia', 'kamu', 'pergi', 'harus', 'uang', 'rumah', 'bernyanyi', 'kembali', 'hutang', 'bayar',
-             'dokter', 'malam', 'hati', 'sakit', 'tinggal', 'siapa', 'siang', 'lapar', 'anak', 'wanita', 'lupa',
-             'kalah', 'makan', 'lari', 'kalau', 'dan', 'lalu', 'marah', 'kepada', 'satu', 'banyak', 'biasa', 'kapan']
-test_text = ""
-rand_count = 0
-
-keycodes = {111, 113, 114, 116}
+from threading import Thread
 
 
-def rnd():
-    global test_text, rand_count, res_text
-    rand_count += 1
-    random.shuffle(raw_texts)
-    test_text = " ".join(raw_texts[0:30])
-    if rand_count > 1:
-        txt.config(state="normal")
-        txt.delete("1.0", END)
-        txt.insert(END, test_text)
-        txt.config(state="disabled")
-        in_txt.delete("1.0", END)
-        res_text.set("Waiting...")
+class App:
+    WIDTH = 640
+    HEIGHT = 480
 
+    raw_texts = ['aku', 'dia', 'kamu', 'pergi', 'harus', 'uang', 'rumah', 'bernyanyi', 'kembali', 'hutang', 'bayar',
+                 'dokter', 'malam', 'hati', 'sakit', 'tinggal', 'siapa', 'siang', 'lapar', 'anak', 'wanita', 'lupa',
+                 'kalah', 'makan', 'lari', 'kalau', 'dan', 'lalu', 'marah', 'kepada', 'satu', 'banyak', 'biasa',
+                 'kapan']
+    test_text = ""
+    rand_count = 0
 
-def check(ev):
-    if ev.keycode not in keycodes:
-        if len(txt.get("1.0", "end-1c")) == len(in_txt.get("1.0", "end-1c") + ev.char):
-            if txt.get("1.0", "end-1c") == in_txt.get("1.0", "end-1c") + ev.char:
-                res_text.set("Akurat")
-            else:
-                res_text.set("belum akurat")
-        else:
-            res_text.set("Waiting...")
-            if ev.keycode != 50 and ev.keycode != 62:
-                if ev.char == txt.get("1.0", "end-1c")[len(in_txt.get("1.0", "end-1c"))]:
-                    print("benar")
+    def __init__(self):
+        self.rnd()
+        self.root = Tk()
+        self.root.title("Perfectype")
+        self.root.geometry("{}x{}+{}+{}".format(App.WIDTH, App.HEIGHT,
+                                                self.root.winfo_screenwidth() // 2 - App.WIDTH // 2,
+                                                self.root.winfo_screenheight() // 2 - App.HEIGHT // 2))
+        self.root.resizable(False, False)
+
+        Label(text="Text").pack()
+        self.txt = Text(self.root, width=100, height=6, padx=5, pady=5)
+        self.txt.insert(END, App.test_text)
+        self.txt.config(state="disabled", font="arial 19")
+
+        self.txt.pack()
+
+        Label(text="Input").pack()
+        self.in_txt = Text(self.root, width=100, height=6, padx=5, pady=5)
+        self.in_txt.config(font="arial 19")
+        self.in_txt.focus()
+        self.in_txt.pack()
+
+        self.res_text = StringVar()
+        self.res_text.set("Waiting...")
+
+        result = Label(self.root, textvariable=self.res_text)
+        result.pack()
+
+        Button(self.root, text="random", command=self.rnd).pack()
+
+        self.root.protocol("WM_DELETE_WINDOW", self.callback)
+
+        self.t = Thread(target=self.check)
+        self.t.daemon = True
+        self.t.start()
+
+    def run(self):
+        self.root.mainloop()
+
+    def callback(self):
+        if messagebox.askokcancel("Keluar", "Apakah Anda ingin keluar?"):
+            self.root.quit()
+
+    def rnd(self):
+        App.rand_count += 1
+        random.shuffle(App.raw_texts)
+        App.test_text = " ".join(App.raw_texts[0:30])
+        if App.rand_count > 1:
+            self.txt.config(state="normal")
+            self.txt.delete("1.0", END)
+            self.txt.insert(END, App.test_text)
+            self.txt.config(state="disabled")
+            self.in_txt.delete("1.0", END)
+            self.res_text.set("Menunggu...")
+
+    def check(self):
+        while True:
+            if len(self.txt.get("1.0", "end-1c")) == len(self.in_txt.get("1.0", "end-1c")):
+                if self.txt.get("1.0", "end-1c") == self.in_txt.get("1.0", "end-1c"):
+                    self.res_text.set("Akurat")
                 else:
-                    print("salah")
-    # if ev.keycode != 22:
-    #     pass
+                    self.res_text.set("belum akurat")
+            else:
+                self.res_text.set("Menunggu...")
 
 
-def on_closing():
-    if messagebox.askokcancel("Keluar", "Apakah Anda ingin keluar?"):
-        root.destroy()
-
-
-rnd()
-
-root = Tk()
-root.title("Perfectype")
-root.geometry("{}x{}+{}+{}".format(WIDTH, HEIGHT,
-                                   root.winfo_screenwidth() // 2 - WIDTH // 2,
-                                   root.winfo_screenheight() // 2 - HEIGHT // 2))
-root.resizable(False, False)
-
-Label(text="Text").pack()
-txt = Text(root, width=100, height=6, padx=5, pady=5)
-txt.insert(END, test_text)
-txt.config(state="disabled", font="arial 19")
-
-txt.pack()
-
-Label(text="Input").pack()
-in_txt = Text(root, width=100, height=6, padx=5, pady=5)
-in_txt.bind('<Key>', check)
-in_txt.config(font="arial 19")
-in_txt.focus()
-
-in_txt.pack()
-
-res_text = StringVar()
-res_text.set("Waiting...")
-
-result = Label(root, textvariable=res_text)
-result.pack()
-
-Button(root, text="random", command=rnd).pack()
-
-root.protocol("WM_DELETE_WINDOW", on_closing)
-root.mainloop()
+app = App()
+app.run()
